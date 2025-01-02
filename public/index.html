@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploadix: File Upload & Search</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./uplodix-logo-removebg.png">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        button {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            background-color: #f8f9fa;
+        }
+
+        input[type="text"] {
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .file-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="./uplodix-logo-removebg.png" alt="Uplodix Logo" style="height: 70px;
+        position: relative;
+        left: 200px;">
+        <h1>File Upload & Search</h1>
+        <input type="file" id="fileInput" />
+
+        <button id="uploadBtn">Upload File</button>
+
+        <input type="text" id="searchInput" placeholder="Search files by name..." />
+        <button id="searchBtn">Search</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const searchInput = document.getElementById("searchInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const results = document.getElementById("results");
+
+        uploadBtn.addEventListener("click", async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("/upload", { method: "POST", body: formData });
+                const result = await response.json();
+                alert(result.message);
+            } catch (err) {
+                console.error(err);
+                alert("Error uploading file.");
+            }
+        });
+
+        searchBtn.addEventListener("click", async () => {
+            const query = searchInput.value.trim();
+            if (!query) {
+                alert("Please enter a search term.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+                const files = await response.json();
+
+                results.innerHTML = "";
+                if (files.length > 0) {
+                    files.forEach(file => {
+                        const div = document.createElement("div");
+                        div.className = "file-item";
+                        div.innerHTML = `<span>Filename:</span> ${file.filename}<br><span>Uploaded:</span> ${new Date(file.uploadDate).toLocaleString()}`;
+                        results.appendChild(div);
+                    });
+                } else {
+                    results.textContent = "No files found.";
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error searching files.");
+            }
+        });
+    </script>
+</body>
+
+</html>
