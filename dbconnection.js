@@ -29,12 +29,15 @@ const mongoose = require("mongoose");
 
 const connectdb = async () => {
     try {
-        await mongoose.connect('mongodb+srv://safwaasamin:WilD1234@cluster0.kuc2p.mongodb.net/demo_first?retryWrites=true&w=majority');
+        await mongoose.connect(process.env.MONGO_URI, {
+            connectTimeoutMS: 30000,
+            socketTimeoutMS: 30000,
+        });
+        mongoose.set('bufferCommands', false);
         console.log("Database connected");
     } catch (err) {
         console.error("Database connection error:", err);
     }
 };
 
-// Export the connection function
 module.exports = connectdb;
