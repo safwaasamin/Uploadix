@@ -4,10 +4,8 @@ require("dotenv").config(); // Load environment variables from .env file
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI; // Use environment variable for MongoDB URI
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true, // Ensures compatibility with MongoDB URI
-      useUnifiedTopology: true, // Handles new server discoveries
-    });
+    await mongoose.connect('mongodb+srv://safwaasamin:WilD1234@cluster0.kuc2p.mongodb.net/demo_first?retryWrites=true&w=majority');
+
     console.log("Database connected successfully");
   } catch (err) {
     console.error("Database connection error:", err.message);
