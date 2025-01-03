@@ -15,22 +15,19 @@
 
 const mongoose = require("mongoose");
 
-const connectdb = async () => {
+const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://<username>:<password>@cluster0.kuc2p.mongodb.net/<database>?retryWrites=true&w=majority', {
+        await mongoose.connect(process.env.MONGO_URI || "mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority", {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            connectTimeoutMS: 30000, // Increase connection timeout to 30s
-            socketTimeoutMS: 30000, // Increase socket timeout to 30s
+            connectTimeoutMS: 30000, // 30 seconds
+            socketTimeoutMS: 30000, // 30 seconds
         });
-
-        mongoose.set('bufferCommands', false); // Disable buffering for operations
-        mongoose.set('strictQuery', false);   // To avoid query warnings
-
         console.log("Database connected successfully!");
     } catch (err) {
-        console.error("Database connection error:", err.message);
+        console.error("Error connecting to MongoDB:", err.message);
+        process.exit(1); // Exit the app if connection fails
     }
 };
 
-module.exports = connectdb;
+module.exports = connectDB;

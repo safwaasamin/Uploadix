@@ -3,14 +3,15 @@ const multer = require("multer");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-const connectdb = require("./dbconnection");
+// const connectdb = 
 const mongoose = require("mongoose");
 
 const app = express();
 const uploadDir = path.join(__dirname, "uploads");
 
 // Connect to MongoDB
-connectdb();
+const connectDB = require("./dbconnection");
+connectDB();
 
 // Ensure upload directory exists
 if (!fs.existsSync(uploadDir)) {
