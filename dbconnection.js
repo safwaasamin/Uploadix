@@ -17,16 +17,13 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI || "mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            connectTimeoutMS: 30000, // 30 seconds
-            socketTimeoutMS: 30000, // 30 seconds
+        await mongoose.connect(process.env.MONGO_URI || "mongodb+srv://safwaasamin:WilD1234@cluster0.kuc2p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+            connectTimeoutMS: 30000, // Increase connection timeout
         });
         console.log("Database connected successfully!");
     } catch (err) {
         console.error("Error connecting to MongoDB:", err.message);
-        process.exit(1); // Exit the app if connection fails
+        process.exit(1);
     }
 };
 
