@@ -42,24 +42,19 @@ const fileSchema = new mongoose.Schema({
 const File = mongoose.model("File", fileSchema);
 
 // File Upload Endpoint
-app.post("/upload", upload.single("file"), async (req, res) => {
-    const file = req.file;
-    if (!file) {
-        return res.status(400).json({ message: "No file uploaded." });
-    }
-
-    const fileData = {
-        filename: file.originalname,
-        uploadDate: new Date(),
-        path: file.path,
-    };
-
+app.post('/upload', async (req, res) => {
     try {
-        await File.create(fileData); // Save the file data using Mongoose
-        res.status(200).json({ message: "File uploaded and saved to MongoDB!" });
-    } catch (err) {
-        console.error("Error saving to MongoDB:", err);
-        res.status(500).json({ message: "Error saving file data." });
+        console.log('File upload initiated');
+        const file = req.file; // Example of getting file
+        console.log('File data:', file);
+
+        const result = await FileModel.create({ filename: file.filename });
+        console.log('File saved to MongoDB:', result);
+
+        res.status(200).send('File uploaded successfully');
+    } catch (error) {
+        console.error('Error saving to MongoDB:', error.message);
+        res.status(500).send('Error saving file');
     }
 });
 
